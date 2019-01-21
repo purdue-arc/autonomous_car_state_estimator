@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(autonomous_car_state_estimator)
 
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -8,12 +12,17 @@ project(autonomous_car_state_estimator)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  octomap
   roscpp
   sensor_msgs
   std_msgs
   tf
+  ecl_linear_algebra
+  ecl_time
 )
+
+find_package(octomap REQUIRED)
+
+find_package(Eigen3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -105,10 +114,14 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
 #  LIBRARIES autonomous_car_state_estimator
 #  CATKIN_DEPENDS octomap roscpp sensor_msgs std_msgs tf
 #  DEPENDS system_lib
+CATKIN_DEPENDS
+   ecl_linear_algebra
+   ecl_time
 )
 
 ###########
@@ -120,6 +133,8 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${OCTOMAP_INCLUDE_DIRS}
+  ${Eigen_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -199,3 +214,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+
+
+
